@@ -10,17 +10,13 @@ import UIKit
 import Firebase
 
 class ChatViewController: UIViewController {
-
+    
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var messageTextfield: UITextField!
     
     let db = Firestore.firestore()
     
-    var messages: [Message] = [
-        Message(sender: "a@b.c", body: "m1"),
-        Message(sender: "a1@b.c", body: "m2"),
-        Message(sender: "a@b.c", body: "m3"),
-    ]
+    var messages: [Message] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,7 +32,12 @@ class ChatViewController: UIViewController {
     func loadMessages() {
         messages = []
         
-        db.collection(K.FStore.collectionName).getDocuments { (querySnapshot, error) in
+        db.collection(K.FStore.collectionName)
+            .order(by: K.FStore.dateField)
+            .addSnapshotListener { (querySnapshot, error) in
+            
+            self.messages = []
+            
             if let error = error {
                 print("ERROR get data from FS", error)
             } else {
@@ -60,11 +61,17 @@ class ChatViewController: UIViewController {
     @IBAction func sendPressed(_ sender: UIButton) {
         if let messageBody = messageTextfield.text, let messageSender = Auth.auth().currentUser?.email {
             
-            db.collection(K.FStore.collectionName).addDocument(data: [K.FStore.senderField: messageSender, K.FStore.bodyField: messageBody]) { (error) in
+            db.collection(K.FStore.collectionName).addDocument(
+                data: [K.FStore.senderField: messageSender,
+                       K.FStore.bodyField: messageBody,
+                       K.FStore.dateField: Date().timeIntervalSince1970
+                ]
+            ) { (error) in
                 if let error = error {
                     print("ERROR Saving data to store", error)
                 } else {
                     print("Data saved to FS")
+                    self.messageTextfield.text = ""
                 }
             }
         }
@@ -80,7 +87,7 @@ class ChatViewController: UIViewController {
             print("ERROR SIGNOUT", signOutError)
         }
     }
-
+    
 }
 
 //MARK: - UITableVIewDataSource
