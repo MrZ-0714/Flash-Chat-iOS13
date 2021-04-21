@@ -22,9 +22,9 @@ class ChatViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.dataSource = self
         title = "Flash Chat"
         navigationItem.hidesBackButton = true
-
     }
     
     @IBAction func sendPressed(_ sender: UIButton) {
@@ -43,6 +43,7 @@ class ChatViewController: UIViewController {
 
 }
 
+//MARK: - UITableVIewDataSource
 extension ChatViewController:UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return messages.count

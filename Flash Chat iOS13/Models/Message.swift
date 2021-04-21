@@ -10,5 +10,5 @@ import Foundation
 
 struct Message {
     let sender: String // email
-    let body: String // mesage body
+    let body: String // message body
 }
