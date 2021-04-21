@@ -14,6 +14,8 @@ class ChatViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var messageTextfield: UITextField!
     
+    let db = Firestore.firestore()
+    
     var messages: [Message] = [
         Message(sender: "a@b.c", body: "m1"),
         Message(sender: "a1@b.c", body: "m2"),
@@ -30,6 +32,16 @@ class ChatViewController: UIViewController {
     }
     
     @IBAction func sendPressed(_ sender: UIButton) {
+        if let messageBody = messageTextfield.text, let messageSender = Auth.auth().currentUser?.email {
+            
+            db.collection(K.FStore.collectionName).addDocument(data: [K.FStore.senderField: messageSender, K.FStore.bodyField: messageBody]) { (error) in
+                if let error = error {
+                    print("ERROR Saving data to store", error)
+                } else {
+                    print("Data saved to FS")
+                }
+            }
+        }
     }
     
     @IBAction func logOutButtonPressed(_ sender: UIBarButtonItem) {

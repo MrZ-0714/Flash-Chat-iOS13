@@ -11,4 +11,11 @@ struct K {
     static let loginSegue = "LoginToChat"
     static let cellIdentifier = "ReusableCell"
     static let cellNibName = "MessageCell"
+    
+    struct FStore {
+        static let collectionName = "messagesiOS"
+        static let senderField = "sender"
+        static let bodyField = "body"
+        static let dateField = "date"
+    }
 }
