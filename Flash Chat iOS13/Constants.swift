@@ -6,7 +6,8 @@
 //  Copyright © 2021 Angela Yu. All rights reserved.
 //
 
-struct Constants {
+struct K {
     static let reisteredSegue = "RegisterToChat"
     static let loginSegue = "LoginToChat"
+    static let cellIdentifier = "ReusableCell"
 }
